@@ -53,6 +53,7 @@ int main(){
     int secondMstWeight = INF;
     for (int i = 0; i < E; i++) {
         int addedWeight = addEdge(i);
+        printf("mstWeight: %d addedWeight: %d\n", mstWeight, addedWeight);
         if (addedWeight < secondMstWeight && addedWeight > mstWeight) secondMstWeight = addedWeight; 
     }
     
@@ -134,7 +135,7 @@ int findMaxWeight(int a, int b){
         u = mstParent[u][0];
     }
 
-    int ancDiff_u = depth[u] - depth[a], ancDiff_v = depth[u] - depth[b];
+    int ancDiff_u = depth[a] - depth[u], ancDiff_v = depth[b] - depth[u];
     int anc = u;
     u = a, v = b;
     int maxWeight_u = 0, maxWeight_v = 0;
@@ -156,6 +157,6 @@ int findMaxWeight(int a, int b){
             ancDiff_v &= ~(1 << idx_v++);
         }
     }
-    printf("maxWeight_%d-%d: %d, maxWeight_%d-%d: %d\n", a, anc, maxWeight_u, b, anc, maxWeight_v);
+    //printf("maxWeight_%d-%d: %d, maxWeight_%d-%d: %d\n", a, anc, maxWeight_u, b, anc, maxWeight_v);
     return max(maxWeight_u, maxWeight_v);
 }
