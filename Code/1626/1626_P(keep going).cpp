@@ -154,3 +154,17 @@ int getWeightOnPath(int u, int anc, int w){
     }
     return weight;
 }
+
+/*(50%)
+반례: 
+5 5
+1 2 2
+2 3 2
+2 5 2
+3 4 2
+4 5 1
+ans: 8
+out: -1
+>> 가장 큰 weight의 edge만 찾아서 바꿔주는 경우 -> 문제가 발생(있음에도 갱신 불가)
+>> 제거할 간선을 어떻게 찾을지 고민해볼 것
+*/
