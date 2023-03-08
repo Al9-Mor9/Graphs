@@ -13,6 +13,7 @@ vector<vector<pair<int, int>>> mst;
 int parent[MAX], depth[MAX];
 int mstParent[MAX][MAX_DEPTH];
 int maxWeight[MAX][MAX_DEPTH];
+int secondMaxWeight[MAX][MAX_DEPTH];
 int mstWeight, mstEdgeCnt;
 
 int kruskal();
@@ -20,7 +21,8 @@ int find(int a);
 bool uni(int a, int b);
 int addEdge(int i);
 void makeTree(int cur, int par);
-int findMaxWeight(int u, int v);
+int findLSA(int u, int v);
+int getWeightOnPath(int u, int v, int w);
 
 int main(){
     scanf("%d%d", &V, &E);
@@ -53,13 +55,12 @@ int main(){
     int secondMstWeight = INF;
     for (int i = 0; i < E; i++) {
         int addedWeight = addEdge(i);
-        printf("mstWeight: %d addedWeight: %d\n", mstWeight, addedWeight);
         if (addedWeight < secondMstWeight && addedWeight > mstWeight) secondMstWeight = addedWeight; 
     }
     
     //바뀐 게 없으면 second mst가 존재하지 않는다는 것.
     if (secondMstWeight == INF) printf("-1");
-    else printf("%d %d", mstWeight, secondMstWeight);
+    else printf("%d", secondMstWeight);
 }
 
 int kruskal(){
@@ -95,9 +96,9 @@ int addEdge(int i){
     auto edge = adj.at(i);
     int w = get<0>(edge), u = get<1>(edge), v = get<2>(edge);
     //u -> v로 가는 경로에서의 최대 가중치를 찾고 그걸 빼고 내 가중치를 넣으면 됨.
-    int maxWeightOnPath = findMaxWeight(u, v);
-    printf("maxWeightOnPath(%d ~ %d): %d\n", u, v, maxWeightOnPath);
-    return mstWeight - maxWeightOnPath + w;
+    int LSA= findLSA(u, v);
+    int weightOnPath = getWeightOnPath(u, v, w);
+    return mstWeight - weightOnPath + w;
 }
 
 void makeTree(int cur, int par){
@@ -106,12 +107,13 @@ void makeTree(int cur, int par){
             depth[child.first] = depth[cur] + 1;
             mstParent[child.first][0] = cur;
             maxWeight[child.first][0] = child.second;
+            secondMaxWeight[child.first][0] = child.second;
             makeTree(child.first, cur);
         }
     }
 }
 
-int findMaxWeight(int a, int b){
+int findLSA(int a, int b){
     int u = a, v = b;
     if (depth[u] < depth[v]) swap(u, v);
     int diff = depth[u] - depth[v];
@@ -134,44 +136,21 @@ int findMaxWeight(int a, int b){
 
         u = mstParent[u][0];
     }
-
-    int ancDiff_u = depth[a] - depth[u], ancDiff_v = depth[b] - depth[u];
-    int anc = u;
-    u = a, v = b;
-    int maxWeight_u = 0, maxWeight_v = 0;
-    int idx_u = 0, idx_v = 0;
-
-    while (ancDiff_u || ancDiff_v){
-        if (ancDiff_u) {
-            if(ancDiff_u & (1 << idx_u)) {
-                maxWeight_u = max(maxWeight_u, maxWeight[u][idx_u]);
-                u = mstParent[u][idx_u];                
-            }
-            ancDiff_u &= ~(1 << idx_u++);
-        }
-        if (ancDiff_v) {
-            if(ancDiff_v & (1 << idx_v)) {
-                maxWeight_v = max(maxWeight_v, maxWeight[v][idx_v]);
-                v = mstParent[v][idx_v];                
-            }
-            ancDiff_v &= ~(1 << idx_v++);
-        }
-    }
     //printf("maxWeight_%d-%d: %d, maxWeight_%d-%d: %d\n", a, anc, maxWeight_u, b, anc, maxWeight_v);
-    return max(maxWeight_u, maxWeight_v);
+    return u;
 }
 
-/*(50%)
-반례: 
-5 5
-1 2 2
-2 3 2
-2 5 2
-3 4 2
-4 5 1
-ans: 8
-out: -1
+int getWeightOnPath(int u, int anc, int w){
+    int diff = depth[u] - depth[anc];
+    int weight = 0;
+    int idx = 0;
 
->> 가장 큰 weight의 edge만 찾아서 바꿔주는 경우 -> 문제가 발생(있음에도 갱신 불가)
->> 제거할 간선을 어떻게 찾을지 고민해볼 것
-*/
+    while (diff){
+        if(diff & (1 << idx)) {
+            weight = max(weight, maxWeight[u][idx]);
+            u = mstParent[u][idx];                
+        }
+        diff &= ~(1 << idx++);
+    }
+    return weight;
+}
