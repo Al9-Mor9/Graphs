@@ -34,7 +34,6 @@ int main(){
     
     mst.resize(V + 1);
     mstWeight = kruskal();
-    printf("mstEdgeCnt: %d\n", mstEdgeCnt);
     if (mstEdgeCnt != V - 1) {
         printf("-1");
         return 0;
@@ -54,9 +53,9 @@ int main(){
     int secondMstWeight = INF;
     for (int i = 0; i < E; i++) {
         int addedWeight = addEdge(i);
-        if (addedWeight < secondMstWeight && addedWeight != mstWeight) secondMstWeight = addedWeight; 
+        if (addedWeight < secondMstWeight && addedWeight > mstWeight) secondMstWeight = addedWeight; 
     }
-
+    
     //바뀐 게 없으면 second mst가 존재하지 않는다는 것.
     if (secondMstWeight == INF) printf("-1");
     else printf("%d %d", mstWeight, secondMstWeight);
@@ -66,7 +65,7 @@ int kruskal(){
     int weight = 0;//mst의 가중치
     sort(adj.begin(), adj.end());//가중치 크기대로 일단 정렬
     for (auto edge : adj){
-        int u = get<1>(edge), v = get<2>(edge);
+        int w = get<0>(edge), u = get<1>(edge), v = get<2>(edge);
         if (uni(u, v)) {
             weight += get<0>(edge);
             mst[u].push_back({v, w});
@@ -96,7 +95,7 @@ int addEdge(int i){
     int w = get<0>(edge), u = get<1>(edge), v = get<2>(edge);
     //u -> v로 가는 경로에서의 최대 가중치를 찾고 그걸 빼고 내 가중치를 넣으면 됨.
     int maxWeightOnPath = findMaxWeight(u, v);
-    printf("maxWeightOnPath (%d ~ %d) : %d\n", u, v, maxWeightOnPath);
+    printf("maxWeightOnPath(%d ~ %d): %d\n", u, v, maxWeightOnPath);
     return mstWeight - maxWeightOnPath + w;
 }
 
@@ -135,19 +134,28 @@ int findMaxWeight(int a, int b){
         u = mstParent[u][0];
     }
 
-    int ancDiff_u = depth[u] - depth[a], ancDiff_v = depth[b] - depth[b];
+    int ancDiff_u = depth[u] - depth[a], ancDiff_v = depth[u] - depth[b];
+    int anc = u;
+    u = a, v = b;
     int maxWeight_u = 0, maxWeight_v = 0;
     int idx_u = 0, idx_v = 0;
-    while (ancDiff_u || ancDiff_v){//여기가 문제
+
+    while (ancDiff_u || ancDiff_v){
         if (ancDiff_u) {
-            
-            maxWeight_u = max(maxWeight_u, maxWeight[u][ancDiff_u & (1 << idx_u)]);
+            if(ancDiff_u & (1 << idx_u)) {
+                maxWeight_u = max(maxWeight_u, maxWeight[u][idx_u]);
+                u = mstParent[u][idx_u];                
+            }
             ancDiff_u &= ~(1 << idx_u++);
         }
         if (ancDiff_v) {
-            maxWeight_v = max(maxWeight_v, maxWeight[v][ancDiff_v & (1 << idx_v)]);
+            if(ancDiff_v & (1 << idx_v)) {
+                maxWeight_v = max(maxWeight_v, maxWeight[v][idx_v]);
+                v = mstParent[v][idx_v];                
+            }
             ancDiff_v &= ~(1 << idx_v++);
         }
     }
-    return max(ancDiff_u, ancDiff_v);
+    printf("maxWeight_%d-%d: %d, maxWeight_%d-%d: %d\n", a, anc, maxWeight_u, b, anc, maxWeight_v);
+    return max(maxWeight_u, maxWeight_v);
 }
