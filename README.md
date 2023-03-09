@@ -29,4 +29,4 @@
 (--> union-find, kruskal, log lca를 모두 사용해야 하는 문제. 개념 정리 후 풀어보아요)
 
 ### 추가 문제
-+ (G4) [가장 가까운 공통 조상 3584](https://www.acmicpc.net/problem/3584)[<img src = "https://github.com/Frog-Slayer.png" width="25" height="25">](./Code/3584/3584_P.cpp)[<img src = "https://github.com/Haaarimmm.png" width="25" height="25">](./Code/3584/3584_K.py)
++ (G4) [가장 가까운 공통 조상 3584](https://www.acmicpc.net/problem/3584)[<img src = "https://github.com/Frog-Slayer.png" width="25" height="25">](./Code/3584/3584_P.cpp)[<img src = "https://github.com/Haaarimmm.png" width="25" height="25">](./Code/3584/3584_K.py)[<img src = "https://github.com/wocjs.png" width="25" height="25">](./Code/3584/3584_H.py)
