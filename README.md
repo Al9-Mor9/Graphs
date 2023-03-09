@@ -4,7 +4,7 @@
 ## 풀어볼 문제들
 
 ### :evergreen_tree: 난이도 (中)
-+ A - (G5) [집합의 표현 1717](https://www.acmicpc.net/problem/1717)[<img src = "https://github.com/Frog-Slayer.png" width="25" height="25">](./Code/1717/1717_P.cpp)[<img src = "https://github.com/Haaarimmm.png" width="25" height="25">](./Code/1717/1717_K.py)
++ A - (G5) [집합의 표현 1717](https://www.acmicpc.net/problem/1717)[<img src = "https://github.com/Frog-Slayer.png" width="25" height="25">](./Code/1717/1717_P.cpp)[<img src = "https://github.com/Haaarimmm.png" width="25" height="25">](./Code/1717/1717_K.py)[<img src = "https://github.com/suchshin.png" width="25" height="25">](./Code/1717/1717_S.py)
 + B - (G3) [줄 세우기 2252](https://www.acmicpc.net/problem/2252)
 + C - (G4) [네트워크 연결 1922](https://www.acmicpc.net/problem/1922)
 + E - (G4) [키 순서 2458](https://www.acmicpc.net/problem/2458)
