@@ -26,7 +26,7 @@
 ### :fire::fire: 난이도 (上)
 + I - (D4) [**두 번째로 작은 스패닝 트리 1626**](https://www.acmicpc.net/problem/1626)[<img src = "https://github.com/Frog-Slayer.png" width="25" height="25">](./Code/1626/1626_P.cpp)
 
-(--> union-find, kruskal, log lsa를 모두 사용해야 하는 문제. 개념 정리 후 풀어보아요)
+(--> union-find, kruskal, log lca를 모두 사용해야 하는 문제. 개념 정리 후 풀어보아요)
 
 ### 추가 문제
 + (G4) [가장 가까운 공통 조상 3584](https://www.acmicpc.net/problem/3584)
