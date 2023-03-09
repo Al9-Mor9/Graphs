@@ -7,7 +7,7 @@ int parent[MAX];
 int depth[MAX];
 vector<vector<int>> childs;
 
-int findLSA(int u, int v){
+int findLCA(int u, int v){
 	if (depth[u] < depth[v]) swap(u, v);
 
 	while (depth[u] != depth[v]) {
@@ -49,7 +49,7 @@ int main(){
 		
 		int u, v;
 		scanf("%d%d", &u, &v);
-		printf("%d\n", findLSA(u ,v));
+		printf("%d\n", findLCA(u ,v));
 	
 	}
 }
