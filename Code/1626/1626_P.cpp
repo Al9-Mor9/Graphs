@@ -1,3 +1,4 @@
+//통과는 했는데 좀 더럽게 풀었음
 #include <iostream>
 #include <vector>
 #include <tuple>
@@ -22,7 +23,8 @@ bool uni(int a, int b);
 int addEdge(int i);
 void makeTree(int cur, int par);
 int findLSA(int u, int v);
-int getWeightOnPath(int u, int v, int w);
+pair<int, int> getWeightOnPath(int u, int v);
+pair<int, int> getWeights(pair<int, int> a, pair<int, int> b);
 
 int main(){
     scanf("%d%d", &V, &E);
@@ -48,6 +50,8 @@ int main(){
             if (mstParent[i][j-1]) {
                 mstParent[i][j] = mstParent[mstParent[i][j-1]][j-1];
                 maxWeight[i][j] = max(maxWeight[i][j-1], maxWeight[mstParent[i][j-1]][j-1]);
+                if (maxWeight[i][j-1] != maxWeight[mstParent[i][j-1]][j-1]) secondMaxWeight[i][j] = min(maxWeight[i][j-1], maxWeight[mstParent[i][j-1]][j-1]);
+                else secondMaxWeight[i][j] = max(secondMaxWeight[i][j-1], secondMaxWeight[mstParent[i][j-1]][j-1]);
             }
         }
     }
@@ -69,6 +73,7 @@ int kruskal(){
     for (auto edge : adj){
         int w = get<0>(edge), u = get<1>(edge), v = get<2>(edge);
         if (uni(u, v)) {
+            //printf("mst: %d-%d(%d)\n", u, v, w);    
             weight += get<0>(edge);
             mst[u].push_back({v, w});
             mst[v].push_back({u, w});
@@ -95,9 +100,15 @@ bool uni(int a, int b){
 int addEdge(int i){
     auto edge = adj.at(i);
     int w = get<0>(edge), u = get<1>(edge), v = get<2>(edge);
+    if ((mstParent[u][0] == v && maxWeight[u][0] == w) || (mstParent[v][0] == u && maxWeight[v][0] == w)) return mstWeight; //이미 mst에 존재하는 간선인 경우는 제외하기 
     //u -> v로 가는 경로에서의 최대 가중치를 찾고 그걸 빼고 내 가중치를 넣으면 됨.
     int LSA= findLSA(u, v);
-    int weightOnPath = getWeightOnPath(u, v, w);
+    pair<int, int> weightOnPathUL = getWeightOnPath(u, LSA);
+    pair<int, int> weightOnPathVL = getWeightOnPath(v, LSA);
+    pair<int, int> weights = getWeights(weightOnPathUL, weightOnPathVL);
+    int weightOnPath = weights.first == w ? weights.second : weights.first; 
+
+    //printf("delete %d and add %d\n", weightOnPath, w);
     return mstWeight - weightOnPath + w;
 }
 
@@ -118,7 +129,6 @@ int findLSA(int a, int b){
     if (depth[u] < depth[v]) swap(u, v);
     int diff = depth[u] - depth[v];
     int ret = 0;
-
     while (diff){
         int d = 0;
         for (int i = 1; i <= diff; i *= 2) d++;
@@ -140,31 +150,32 @@ int findLSA(int a, int b){
     return u;
 }
 
-int getWeightOnPath(int u, int anc, int w){
+pair<int, int> getWeightOnPath(int u, int anc){
     int diff = depth[u] - depth[anc];
-    int weight = 0;
+    int maxWeightOnPath = -1, secondWeightOnPath = -1;
     int idx = 0;
 
     while (diff){
         if(diff & (1 << idx)) {
-            weight = max(weight, maxWeight[u][idx]);
+            maxWeightOnPath = max(maxWeightOnPath, maxWeight[u][idx]);
+            secondWeightOnPath = (maxWeightOnPath == maxWeight[u][idx] ? max(secondWeightOnPath, secondMaxWeight[u][idx]) : min(maxWeightOnPath, maxWeight[u][idx])); 
             u = mstParent[u][idx];                
         }
         diff &= ~(1 << idx++);
     }
-    return weight;
+    return {maxWeightOnPath, secondWeightOnPath};
 }
 
-/*(50%)
-반례: 
-5 5
-1 2 2
-2 3 2
-2 5 2
-3 4 2
-4 5 1
-ans: 8
-out: -1
->> 가장 큰 weight의 edge만 찾아서 바꿔주는 경우 -> 문제가 발생(있음에도 갱신 불가)
->> 제거할 간선을 어떻게 찾을지 고민해볼 것
-*/
+pair<int, int> getWeights(pair<int, int> a, pair<int, int> b){
+    int arr[4] = {a.first, a.second, b.first, b.second};
+    sort(arr, arr+4);
+    int first = arr[3];
+    int second = -1;
+    for (int i = 2; i >= 0; i--){
+        if (arr[i] == first) continue;
+        second = arr[i];
+        break;
+    }
+    if (second == -1) second = first;
+    return {first, second};
+}
