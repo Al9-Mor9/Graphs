@@ -1,56 +1,55 @@
-#include <stdio.h>
-#include <queue>
+#include <iostream>
+#include <vector>
 using namespace std;
+#define MAX 10001
 
-int T, N, parent[10001],a, b, qa, qb, ans;
-queue<int> ancx;
-queue<int> ancy;
+int parent[MAX];
+int depth[MAX];
+vector<vector<int>> childs;
 
-int main() {
+int findLSA(int u, int v){
+	if (depth[u] < depth[v]) swap(u, v);
+
+	while (depth[u] != depth[v]) {
+		u = parent[u]; 
+	}
+	while (u != v){
+		u = parent[u];
+		v = parent[v];
+	}
+	return u;
+}
+
+void setParents(int cur, int par){
+	for (int child : childs[cur]){
+		depth[child] = depth[cur] + 1;
+		setParents(child, cur);
+	}
+}
+
+int main(){
+	int T;
 	scanf("%d", &T);
-
-	while (T--) {
+	for (int t = 0; t < T; t++){
+		int N, par, child;
 		scanf("%d", &N);
-		for (int i = 0; i < 10001; i++) {
-			parent[i] = 0;
+		childs.clear();
+		childs.resize(N + 1);
+		for (int i = 0; i <= N; i++) parent[i] = 0;
+		for (int i = 0; i <= N; i++) depth[i] = 0;
+
+		for (int i = 0; i < N-1; i++) {
+			scanf("%d%d", &par, &child);
+			parent[child] = par;	
+			childs[par].push_back(child);
 		}
-		while (!ancx.empty()) ancx.pop();
-		while (!ancy.empty()) ancy.pop();
-
-		for (int i = 1; i < N; i++) {
-			scanf("%d%d", &a, &b);
-			parent[b] = a;
-		}
-
-		scanf("%d%d", &qa, &qb);
-
-		while (qa) {
-			ancx.push(qa);
-			qa = parent[qa];
-		}
-		while (qb) {
-			ancy.push(qb);
-			qb = parent[qb];
-		}
-
-		while (1) {
-			if (ancx.front() == ancy.front()) {
-				ans = ancx.front(); break;
-			}
-
-			if (ancx.size() > ancy.size()) {
-				ancx.pop();
-			}
-			else if (ancx.size() < ancy.size()) {
-				ancy.pop();
-			}
-			else {
-				ancx.pop();
-				ancy.pop();
-
-			}
-		}
-
-		printf("%d\n", ans);
+		int start;
+		for (int i = 1; i <= N; i++) if (!parent[i]) start = i;
+		setParents(start, 0);
+		
+		int u, v;
+		scanf("%d%d", &u, &v);
+		printf("%d\n", findLSA(u ,v));
+	
 	}
 }
