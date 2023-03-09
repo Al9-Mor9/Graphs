@@ -38,16 +38,11 @@ int main() {
 				ans = ancx.front(); break;
 			}
 
-			if (ancx.size() > ancy.size()) {
-				ancx.pop();
-			}
-			else if (ancx.size() < ancy.size()) {
-				ancy.pop();
-			}
+			if (ancx.size() > ancy.size()) ancx.pop();
+			else if (ancx.size() < ancy.size()) ancy.pop();
 			else {
 				ancx.pop();
 				ancy.pop();
-
 			}
 		}
 
