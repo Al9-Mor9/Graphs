@@ -23,7 +23,7 @@
 + P - (P5) [거의 최단 경로 5719](https://www.acmicpc.net/problem/5719)
 + Q - (P4) [K번째 최단경로 찾기 1854](https://www.acmicpc.net/problem/1854)
 
-### :fire::fire: 난이도 (上)
+### :fire::fire: 난이도 (上上)
 + I - (D4) [**두 번째로 작은 스패닝 트리 1626**](https://www.acmicpc.net/problem/1626)[<img src = "https://github.com/Frog-Slayer.png" width="25" height="25">](./Code/1626/1626_P.cpp)
 
 (--> union-find, kruskal, log lca를 모두 사용해야 하는 문제. 개념 정리 후 풀어보아요)
