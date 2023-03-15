@@ -42,11 +42,8 @@ int main() {
 		if (depth[a] < depth[b]) swap(a, b);
 		int diff = depth[a] - depth[b];
 
-		while (diff) {
-			int d = 0;
-			for (int j = 1; j <= diff; j *= 2) d++;
-			a = parent[a][d-1];	
-            diff = depth[a] - depth[b];
+		for (int i = 0; i < MAX_DEPTH; i++){
+			if (diff & (1 << i)) a = parent[a][i];
 		}
 
 		if (a != b) {
