@@ -1,6 +1,6 @@
 import sys
 sys.stdin = open('init.txt', 'r')
-
+##### kruskal
 
 # 특정 원소가 속한 집합의 root 찾기
 def find(par, x):
