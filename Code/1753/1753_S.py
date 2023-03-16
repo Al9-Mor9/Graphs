@@ -1,6 +1,6 @@
 import sys
 import heapq
-input = sys.stdin.readline
+
 INF = 100000000
 
 V,E = map(int, input().split())         # 정점, 간선
